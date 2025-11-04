@@ -7,10 +7,9 @@ PyJWT==2.8.0
 bcrypt==4.1.2
 Werkzeug==3.0.1
 gunicorn==21.2.0
-
 # Analysis.py dependencies
 python-docx==1.1.0
-mediapipe==0.10.9
+mediapipe
 opencv-python==4.9.0.80
 transformers==4.36.2
 moviepy==1.0.3
@@ -18,7 +17,6 @@ librosa==0.10.1
 matplotlib==3.8.2
 numpy==1.24.3
 scipy==1.11.4
-
 # Interview.py dependencies
 google-generativeai==0.3.2
 pdfplumber==0.10.3
@@ -26,14 +24,11 @@ gTTS==2.5.0
 pygame==2.5.2
 SpeechRecognition==3.10.1
 Pillow==10.2.0
-
 # Resume.py dependencies
 pandas==2.1.4
 openpyxl==3.1.2
-
 # Additional dependencies
 python-multipart==0.0.6
-
 flask
 flask-cors
 pymongo
@@ -41,7 +36,6 @@ python-dotenv
 bcrypt
 moviepy
 opencv-python
-mediapipe
 numpy
 librosa
 transformers
