@@ -7,9 +7,9 @@ import gc
 # Add parent directory to path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 
-from interview import (
-    parse_resume, 
-    generate_interview_plan, 
+from .interview import (
+    parse_resume,
+    generate_interview_plan,
     evaluate_answer,
     generate_word_report,
     InterviewPlan,
