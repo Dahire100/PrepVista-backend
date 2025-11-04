@@ -3,9 +3,11 @@ import os
 import json
 import time
 import gc
+
 # Add parent directory to path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
-from backend.interview import (
+
+from interview import (
     parse_resume, 
     generate_interview_plan, 
     evaluate_answer,
@@ -17,6 +19,7 @@ from backend.interview import (
 )
 from config import Config
 import google.generativeai as genai
+
 class InterviewService:
     """Service for handling AI interview functionality"""
     
