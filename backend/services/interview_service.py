@@ -17,10 +17,15 @@ from resume import extract_text_from_pdf
 from config import Config
 import google.generativeai as genai
 
-# Stub functions until they're implemented
+
+# --------------------------
+# Stub functions (temporary implementations)
+# --------------------------
+
 def parse_resume(pdf_path):
     """Parse resume using extract_text_from_pdf from resume module"""
     return extract_text_from_pdf(pdf_path)
+
 
 def generate_interview_plan(resume_text):
     """Generate interview plan - stub implementation"""
@@ -33,6 +38,7 @@ def generate_interview_plan(resume_text):
         questions=[]
     )
 
+
 def evaluate_answer(question, answer, plan):
     """Evaluate answer - stub implementation"""
     # TODO: Implement proper answer evaluation
@@ -43,10 +49,16 @@ def evaluate_answer(question, answer, plan):
         improvement_suggestions=[]
     )
 
+
 def generate_word_report(results, output_path):
     """Generate Word report - stub implementation"""
     # TODO: Implement proper report generation
     pass
+
+
+# --------------------------
+# InterviewService Class
+# --------------------------
 
 class InterviewService:
     """Service for handling AI interview functionality"""
@@ -78,15 +90,14 @@ class InterviewService:
             return plan, None
         except Exception as e:
             return None, str(e)
-
-
+    
     @staticmethod
-            create_interview_plan(resume_text):
-                        """
-                                Alias for generate_interview_questions method
-                                        Returns: (interview_plan, error)
-                                                """
-                        return InterviewService.generate_interview_questions(resume_text)
+    def create_interview_plan(resume_text):
+        """
+        Alias for generate_interview_questions method
+        Returns: (interview_plan, error)
+        """
+        return InterviewService.generate_interview_questions(resume_text)
     
     @staticmethod
     def evaluate_candidate_answer(question, answer, plan):
