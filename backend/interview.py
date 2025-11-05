@@ -68,6 +68,7 @@ class InterviewResult:
     user_answer: str
     evaluation: Evaluation
     face_detected: bool = True
+        candidate_name: str = "Candidate"  # Optional parameter for backward compatibility
 
 # Initialize pygame for audio playback with better error handling
 try:
