@@ -3,7 +3,9 @@ from flask_cors import CORS
 from pymongo import MongoClient
 from config import Config
 import os
-import sys, os
+import sys
+
+# Ensure correct import paths
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -23,13 +25,14 @@ def create_app():
     app.config.from_object(Config)
     Config.init_app(app)
     
-    # Enable CORS
+    # ✅ Enable CORS (Allow frontend + render)
     CORS(app, resources={
         r"/api/*": {
             "origins": [
-                Config.FRONTEND_URL,      # your deployed frontend
-                "http://localhost:3000",  # React dev (older default)
-                "http://localhost:5173"   # Vite dev server
+                "https://prep-vista-dev.vercel.app",   # Vercel frontend
+                "https://prepvista-backend7.onrender.com",  # Backend domain (Render)
+                "http://localhost:3000",               # Local React
+                "http://localhost:5173"                # Local Vite
             ],
             "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
             "allow_headers": ["Content-Type", "Authorization"],
@@ -38,7 +41,7 @@ def create_app():
         },
         r"/uploads/*": {
             "origins": [
-                Config.FRONTEND_URL,
+                "https://prep-vista-dev.vercel.app",
                 "http://localhost:3000",
                 "http://localhost:5173"
             ],
@@ -48,43 +51,31 @@ def create_app():
         }
     })
     
-    # Connect to MongoDB
+    # ✅ Connect to MongoDB
     try:
         client = MongoClient(Config.MONGO_URI)
         db = client[Config.DB_NAME]
-        
-        # Test connection
         client.server_info()
         print(f"✅ Connected to MongoDB: {Config.DB_NAME}")
-        
     except Exception as e:
         print(f"❌ MongoDB connection failed: {e}")
-        print("Please ensure MongoDB is running on your system.")
         raise
     
-    # Create upload directories
-    upload_dirs = [
-        'uploads/profile_photos',
-        'uploads/videos',
-        'uploads/resumes'
-    ]
+    # ✅ Create upload directories
+    upload_dirs = ['uploads/profile_photos', 'uploads/videos', 'uploads/resumes']
     for directory in upload_dirs:
         os.makedirs(directory, exist_ok=True)
     print(f"✅ Upload directories created/verified")
     
-    # Register blueprints
+    # ✅ Register blueprints
     app.register_blueprint(init_auth_routes(db))
     app.register_blueprint(init_analysis_routes(db))
     app.register_blueprint(init_interview_routes(db))
     app.register_blueprint(init_resume_routes(db))
     
-    # Serve uploaded files (profile photos, etc.)
+    # ✅ Serve uploaded files
     @app.route('/uploads/<path:filename>', methods=['GET'])
     def serve_upload(filename):
-        """
-        Serve uploaded files from the uploads directory.
-        This endpoint handles profile photos, videos, and other uploaded content.
-        """
         try:
             return send_from_directory('uploads', filename)
         except FileNotFoundError:
@@ -92,7 +83,7 @@ def create_app():
         except Exception as e:
             return jsonify({'error': f'Error serving file: {str(e)}'}), 500
     
-    # Health check endpoint
+    # ✅ Health check
     @app.route('/api/health', methods=['GET'])
     def health_check():
         return jsonify({
@@ -106,7 +97,7 @@ def create_app():
             }
         }), 200
     
-    # Root endpoint
+    # ✅ Root endpoint
     @app.route('/', methods=['GET'])
     def index():
         return jsonify({
@@ -121,7 +112,7 @@ def create_app():
             }
         }), 200
     
-    # Error handlers
+    # ✅ Error handlers
     @app.errorhandler(404)
     def not_found(error):
         return jsonify({'error': 'Endpoint not found'}), 404
@@ -136,7 +127,8 @@ def create_app():
     
     return app
 
-# Create app instance at module level for gunicorn
+
+# ✅ App instance for Gunicorn/Render
 app = create_app()
 
 if __name__ == '__main__':
@@ -145,15 +137,10 @@ if __name__ == '__main__':
     print("="*50)
     print(f"🌐 Server: http://localhost:{Config.FLASK_PORT}")
     print(f"🗄️  Database: {Config.DB_NAME}")
-    print(f"🌍 CORS: {Config.FRONTEND_URL}")
+    print(f"🌍 Frontend: https://prep-vista-dev.vercel.app")
     print(f"📁 Upload Directory: uploads/")
     print(f"🔧 Debug Mode: {Config.FLASK_DEBUG}")
     print("="*50)
-    print("\n📋 Available Endpoints:")
-    print(f"  • Health Check: http://localhost:{Config.FLASK_PORT}/api/health")
-    print(f"  • Auth: http://localhost:{Config.FLASK_PORT}/api/auth")
-    print(f"  • Uploads: http://localhost:{Config.FLASK_PORT}/uploads/<filename>")
-    print("="*50 + "\n")
     
     app.run(
         host='0.0.0.0',
