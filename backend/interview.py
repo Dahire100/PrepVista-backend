@@ -29,8 +29,7 @@ import cv2
 # from PIL import Image, ImageTk
 
 # --- 2. CONFIGURATION ---
-API_KEY = "AIzaSyCelKJ4FkyvZUrw80t1HpeWczm3aTWihlU"  
-# Configure the API
+API_KEY = os.getenv('GEMINI_API_KEY_1', 'your_gemini_api_key_here')# Configure the API
 model = None
 try:
     if not API_KEY or "YOUR_VALID_API_KEY_HERE" in API_KEY:
