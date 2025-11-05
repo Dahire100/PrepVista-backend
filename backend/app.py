@@ -3,6 +3,9 @@ from flask_cors import CORS
 from pymongo import MongoClient
 from config import Config
 import os
+import sys, os
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # Import route initializers
 from routes import (
