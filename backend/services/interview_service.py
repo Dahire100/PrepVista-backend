@@ -78,6 +78,15 @@ class InterviewService:
             return plan, None
         except Exception as e:
             return None, str(e)
+
+
+        @staticmethod
+            def create_interview_plan(resume_text):
+                        """
+                                Alias for generate_interview_questions method
+                                        Returns: (interview_plan, error)
+                                                """
+                        return InterviewService.generate_interview_questions(resume_text)
     
     @staticmethod
     def evaluate_candidate_answer(question, answer, plan):
