@@ -31,11 +31,10 @@ def generate_interview_plan(resume_text):
     """Generate interview plan - stub implementation"""
     # TODO: Implement proper interview plan generation
     return InterviewPlan(
-        candidate_name="Candidate",
-        position="Software Engineer",
-        key_skills=["Python", "Backend Development"],
-        experience_level="Intermediate",
-        questions=[]
+        branch="Software Engineering",
+        skills_summary="Python, Backend Development",
+        projects_summary="To be analyzed from resume",
+        question_bank=[]
     )
 
 
