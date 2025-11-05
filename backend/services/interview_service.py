@@ -80,8 +80,8 @@ class InterviewService:
             return None, str(e)
 
 
-        @staticmethod
-            def create_interview_plan(resume_text):
+    @staticmethod
+            create_interview_plan(resume_text):
                         """
                                 Alias for generate_interview_questions method
                                         Returns: (interview_plan, error)
