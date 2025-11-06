@@ -8,8 +8,8 @@ import gc
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 
 from interview import (
-    parse_resume,
-    generate_interview_plan,
+    parse_resume, 
+    generate_interview_plan, 
     evaluate_answer,
     generate_word_report,
     InterviewPlan,
@@ -25,13 +25,10 @@ class InterviewService:
     
     def __init__(self):
         # Configure Gemini API
-        try:
-            genai.configure(api_key=Config.GEMINI_API_KEY_1)
-        except Exception as e:
-            raise Exception(f"Failed to configure Gemini API: {str(e)}") from e
+        genai.configure(api_key=Config.GEMINI_API_KEY_1)
     
     @staticmethod
-    def parse_resume_file(pdf_path: str):
+    def parse_resume_file(pdf_path):
         """
         Parse resume PDF and extract text
         Returns: (resume_text, error)
@@ -45,15 +42,13 @@ class InterviewService:
             return None, str(e)
     
     @staticmethod
-    def create_interview_plan(resume_text: str):
+    def create_interview_plan(resume_text):
         """
         Generate interview plan based on resume
         Returns: (plan_dict, error)
         """
         try:
-            # Generate interview plan
             plan = generate_interview_plan(resume_text)
-            
             if not plan:
                 return None, "Failed to generate interview plan"
             
@@ -94,7 +89,7 @@ class InterviewService:
             # Evaluate answer
             evaluation = evaluate_answer(question, answer, resume_keywords)
             
-            # Convert to dict for JSON serialization
+            # Convert to dict
             evaluation_dict = {
                 'score': evaluation.score,
                 'feedback': evaluation.feedback,
@@ -140,6 +135,7 @@ class InterviewService:
                     type=r['question']['type'],
                     question=r['question']['question']
                 )
+                
                 evaluation = Evaluation(
                     score=r['evaluation']['score'],
                     feedback=r['evaluation']['feedback'],
@@ -147,6 +143,7 @@ class InterviewService:
                     corrected_answer=r['evaluation']['corrected_answer'],
                     keywords_matched=r['evaluation'].get('keywords_matched', [])
                 )
+                
                 result = InterviewResult(
                     question=question,
                     user_answer=r['answer'],
@@ -155,12 +152,12 @@ class InterviewService:
                 )
                 results.append(result)
             
-            camera_verified = interview_data.get('camera_verified', True)
-            
             # Generate report
+            camera_verified = interview_data.get('camera_verified', True)
             report_filename = f"Interview_Report_{os.urandom(8).hex()}.docx"
             report_path = os.path.join(output_dir, report_filename)
             
+            # Generate the report
             report_file, avg_score = generate_word_report(plan, results, camera_verified)
             
             # Force cleanup of any resources
@@ -182,7 +179,6 @@ class InterviewService:
                                 import shutil
                                 shutil.copy2(report_file, report_path)
                                 time.sleep(0.3)
-                                
                                 # Try to delete original with retry
                                 for del_attempt in range(3):
                                     try:
@@ -194,13 +190,14 @@ class InterviewService:
                                         if del_attempt == 2:
                                             print(f"Warning: Could not delete temp report file: {report_file}")
                                 break
-                            
                             gc.collect()
                             time.sleep(0.2 * (attempt + 1))
                             continue
+                
+                return report_path, avg_score, None
             
-            return report_path, avg_score, None
-        
+            return None, 0, "Report generation failed"
+            
         except Exception as e:
             # Cleanup on error
             if report_file and os.path.exists(report_file):
@@ -211,8 +208,6 @@ class InterviewService:
                         os.remove(report_file)
                         break
                     except:
-                        if attempt == 2:
-                            pass
-                        time.sleep(0.2)
-            
+                        if attempt < 2:
+                            time.sleep(0.2)
             return None, 0, str(e)
