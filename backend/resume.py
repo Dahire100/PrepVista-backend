@@ -18,7 +18,7 @@ print('Professional Resume Analyzer loaded successfully.')
 
 # ---------------------- Gemini API Setup ----------------------
 GEMINI_API_KEY = os.getenv('GEMINI_API_KEY_2', 'your_gemini_api_key_here'
-                          )genai.configure(api_key=GEMINI_API_KEY)
+                          genai.configure(api_key=GEMINI_API_KEY)
 
 # ---------------------- Professional Formatting Functions ----------------------
 def set_cell_background(cell, fill_color):
